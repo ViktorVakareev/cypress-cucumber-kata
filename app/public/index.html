@@ -1,0 +1,80 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Kata Payments</title>
+  <link rel="stylesheet" href="/styles.css">
+</head>
+<body>
+  <header class="topbar">
+    <span class="brand">Kata Payments</span>
+    <span class="who" data-cy="current-user" hidden></span>
+    <button type="button" class="link" data-cy="logout" hidden>Log out</button>
+  </header>
+
+  <main>
+    <!-- Login view -->
+    <section id="login-view" class="card narrow" data-cy="login-view">
+      <h1>Sign in</h1>
+      <form id="login-form" novalidate>
+        <label for="username">Username</label>
+        <input id="username" name="username" autocomplete="username" data-cy="username">
+        <label for="password">Password</label>
+        <input id="password" name="password" type="password" autocomplete="current-password" data-cy="password">
+        <p class="error" role="alert" data-cy="login-error" hidden></p>
+        <button type="submit" data-cy="login-submit">Sign in</button>
+      </form>
+    </section>
+
+    <!-- Payments view -->
+    <section id="payments-view" data-cy="payments-view" hidden>
+      <div class="banner error" role="alert" data-cy="error-banner" hidden></div>
+
+      <section class="card" data-cy="new-payment" hidden>
+        <h2>New payment</h2>
+        <form id="payment-form" class="grid" novalidate>
+          <div>
+            <label for="debtorIban">Debtor IBAN</label>
+            <input id="debtorIban" name="debtorIban" data-cy="debtor-iban">
+          </div>
+          <div>
+            <label for="creditorIban">Creditor IBAN</label>
+            <input id="creditorIban" name="creditorIban" data-cy="creditor-iban">
+          </div>
+          <div>
+            <label for="amount">Amount</label>
+            <input id="amount" name="amount" inputmode="decimal" data-cy="amount">
+          </div>
+          <div>
+            <label for="currency">Currency</label>
+            <select id="currency" name="currency" data-cy="currency">
+              <option>EUR</option><option>USD</option><option>GBP</option><option>JPY</option>
+            </select>
+          </div>
+          <div class="wide">
+            <label for="reference">Reference</label>
+            <input id="reference" name="reference" maxlength="35" data-cy="reference">
+          </div>
+          <p class="error wide" role="alert" data-cy="form-error" hidden></p>
+          <button type="submit" data-cy="submit-payment">Submit payment</button>
+        </form>
+      </section>
+
+      <section class="card">
+        <h2>Payments</h2>
+        <p data-cy="loading" hidden>Loading payments...</p>
+        <p data-cy="empty" hidden>No payments yet.</p>
+        <table data-cy="payments-table" hidden>
+          <thead>
+            <tr><th>ID</th><th>Reference</th><th>Amount</th><th>Status</th><th>Created by</th><th>Actions</th></tr>
+          </thead>
+          <tbody data-cy="payments-body"></tbody>
+        </table>
+      </section>
+    </section>
+  </main>
+
+  <script src="/app.js"></script>
+</body>
+</html>

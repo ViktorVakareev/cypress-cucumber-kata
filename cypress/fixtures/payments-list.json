@@ -1,0 +1,41 @@
+[
+  {
+    "id": "PAY-0101",
+    "debtorIban": "BG80BNBG96611020345678",
+    "creditorIban": "DE89370400440532013000",
+    "amount": "1234567.89",
+    "currency": "EUR",
+    "reference": "Bond coupon",
+    "status": "Approved",
+    "createdBy": "maker1",
+    "approvals": ["checker1", "checker2"],
+    "requiresSecondApproval": true,
+    "createdAt": "2026-11-01T09:00:00.000Z"
+  },
+  {
+    "id": "PAY-0102",
+    "debtorIban": "GB82WEST12345698765432",
+    "creditorIban": "DE89370400440532013000",
+    "amount": "1500000",
+    "currency": "JPY",
+    "reference": "Tokyo office",
+    "status": "Submitted",
+    "createdBy": "maker2",
+    "approvals": [],
+    "requiresSecondApproval": true,
+    "createdAt": "2026-11-02T10:30:00.000Z"
+  },
+  {
+    "id": "PAY-0103",
+    "debtorIban": "GB82WEST12345698765432",
+    "creditorIban": "BG80BNBG96611020345678",
+    "amount": "0.01",
+    "currency": "GBP",
+    "reference": "Small refund",
+    "status": "Rejected",
+    "createdBy": "maker1",
+    "approvals": [],
+    "requiresSecondApproval": false,
+    "createdAt": "2026-11-03T14:15:00.000Z"
+  }
+]

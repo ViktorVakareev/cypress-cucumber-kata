@@ -1,0 +1,55 @@
+# Move this file to .github/workflows/tests.yml before pushing.
+name: tests
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+  workflow_dispatch:
+
+jobs:
+  checks:
+    name: App tests, typecheck, step check
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+      - run: npm ci
+        env:
+          CYPRESS_INSTALL_BINARY: 0 # this job doesn't need the Cypress binary
+      - run: npm test
+      - run: npm run typecheck
+      - run: npm run check:steps
+
+  e2e:
+    name: Cypress + Cucumber
+    needs: checks
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+      # Installs dependencies (with cache), starts the app, waits for it, runs `cypress run`.
+      - uses: cypress-io/github-action@v6
+        with:
+          start: npm run start:test
+          wait-on: http://localhost:3000/api/health
+          browser: chrome
+      - name: Upload Cucumber HTML report
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: cucumber-report
+          path: reports/
+          if-no-files-found: ignore
+      - name: Upload screenshots of failures
+        if: failure()
+        uses: actions/upload-artifact@v4
+        with:
+          name: cypress-screenshots
+          path: cypress/screenshots/
+          if-no-files-found: ignore

@@ -1,0 +1,7 @@
+node_modules/
+reports/
+cypress/screenshots/
+cypress/videos/
+cypress/downloads/
+*.log
+.DS_Store

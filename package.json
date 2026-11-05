@@ -1,0 +1,43 @@
+{
+  "name": "cypress-cucumber-kata",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Cypress + Cucumber (BDD) test suite in TypeScript for a small payments app with maker-checker approval, IBAN validation and a REST API.",
+  "license": "MIT",
+  "scripts": {
+    "start": "node app/server.js",
+    "start:test": "node app/server.js --test-mode",
+    "test": "node --test",
+    "typecheck": "tsc --noEmit",
+    "check:steps": "node tools/check-steps.mjs",
+    "cy:open": "cypress open",
+    "cy:run": "cypress run",
+    "cy:smoke": "cypress run --expose tags=@smoke",
+    "e2e": "start-server-and-test start:test http://localhost:3000/api/health cy:run",
+    "e2e:smoke": "start-server-and-test start:test http://localhost:3000/api/health cy:smoke"
+  },
+  "cypress-cucumber-preprocessor": {
+    "stepDefinitions": "cypress/support/step_definitions/**/*.ts",
+    "filterSpecs": true,
+    "omitFiltered": true,
+    "html": {
+      "enabled": true,
+      "output": "reports/cucumber-report.html"
+    }
+  },
+  "engines": {
+    "node": "^22.0.0 || ^24.0.0 || >=26.0.0"
+  },
+  "devDependencies": {
+    "@badeball/cypress-cucumber-preprocessor": "^28.0.1",
+    "@bahmutov/cypress-esbuild-preprocessor": "^2.2.8",
+    "@cucumber/cucumber-expressions": "^20.1.0",
+    "@cucumber/gherkin": "^42.0.1",
+    "@cucumber/messages": "^34.2.1",
+    "@types/node": "^22.20.5",
+    "cypress": "^16.2.1",
+    "esbuild": "^0.28.2",
+    "start-server-and-test": "^3.0.13",
+    "typescript": "~5.9.3"
+  }
+}
