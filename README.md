@@ -76,6 +76,14 @@ The fast checks run before any browser starts (the first CI job):
 
 ![npm run check:steps and npm test](docs/images/checks-terminal.png)
 
+All four features green in the Cypress runner (`npm run start:test`, then `npm run cy:open` → E2E Testing → Chrome): **28 scenarios**.
+
+| `login.feature`: 5 passing | `network.feature`: 3 passing (`cy.intercept`) |
+|---|---|
+| ![login.feature in the Cypress runner](docs/images/login.png) | ![network.feature in the Cypress runner](docs/images/network.png) |
+| **`payments-api.feature`: 13 passing (`cy.request`)** | **`payments-ui.feature`: 7 passing (maker-checker)** |
+| ![payments-api.feature in the Cypress runner](docs/images/payments-api.png) | ![payments-ui.feature in the Cypress runner](docs/images/payments-ui.png) |
+
 ## How it works
 
 ```
