@@ -3,6 +3,14 @@ import createBundler from "@bahmutov/cypress-esbuild-preprocessor";
 import { addCucumberPreprocessorPlugin } from "@badeball/cypress-cucumber-preprocessor";
 import { createEsbuildPlugin } from "@badeball/cypress-cucumber-preprocessor/esbuild";
 
+// The demo app's password lives in a local .env file (created by `npm run setup`, never
+// committed). In CI the same file is generated with a random password.
+try {
+  process.loadEnvFile();
+} catch {
+  // no .env file: KATA_PASSWORD (or CYPRESS_password) must come from the environment
+}
+
 export default defineConfig({
   e2e: {
     // The app under test: start it with `npm run start:test` (or let `npm run e2e` do it).
@@ -16,10 +24,10 @@ export default defineConfig({
     screenshotOnRunFailure: true,
     // No automatic retries: a flaky test should fail loudly, not pass on the second try.
     retries: { runMode: 0, openMode: 0 },
-    // Secrets (Cypress 16): read in tests with cy.env(["password"]). Override with the
-    // CYPRESS_password environment variable. This is the local demo app's password.
+    // Secrets (Cypress 16): read in tests with cy.env(["password"]). Value from KATA_PASSWORD;
+    // the CYPRESS_password environment variable overrides it.
     env: {
-      password: "kata-pass-1",
+      password: process.env.KATA_PASSWORD ?? "",
     },
     async setupNodeEvents(on, config) {
       // 1. Registers the Cucumber plugin (tag filtering, reports).

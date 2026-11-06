@@ -7,6 +7,15 @@ const test = require('node:test');
 const assert = require('node:assert/strict');
 const { createApp } = require('../app/server');
 
+// Same password as the app: from .env (`npm run setup`) or the environment.
+try {
+  process.loadEnvFile();
+} catch {
+  // no .env file: KATA_PASSWORD must come from the environment
+}
+const PASSWORD = process.env.KATA_PASSWORD;
+assert.ok(PASSWORD, 'KATA_PASSWORD is not set. Run `npm run setup`.');
+
 let server;
 let base;
 
@@ -22,7 +31,7 @@ async function login(username) {
   const res = await fetch(`${base}/api/login`, {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify({ username, password: 'kata-pass-1' }),
+    body: JSON.stringify({ username, password: PASSWORD }),
   });
   assert.equal(res.status, 200);
   return (await res.json()).token;
@@ -62,13 +71,13 @@ test('health is public', async () => {
 test('login: wrong password gives 401, right one sets an HttpOnly cookie', async () => {
   const bad = await call('/api/login', { method: 'POST', body: { username: 'maker1', password: 'nope' } });
   assert.equal(bad.status, 401);
-  const good = await call('/api/login', { method: 'POST', body: { username: 'maker1', password: 'kata-pass-1' } });
+  const good = await call('/api/login', { method: 'POST', body: { username: 'maker1', password: PASSWORD } });
   assert.equal(good.status, 200);
   assert.match(good.headers.get('set-cookie'), /session=.+; Path=\/; HttpOnly/);
 });
 
 test('login with {"cookie": false} returns a token but sets no cookie', async () => {
-  const res = await call('/api/login', { method: 'POST', body: { username: 'checker1', password: 'kata-pass-1', cookie: false } });
+  const res = await call('/api/login', { method: 'POST', body: { username: 'checker1', password: PASSWORD, cookie: false } });
   assert.equal(res.status, 200);
   assert.equal(res.headers.get('set-cookie'), null);
   assert.ok((await res.json()).token);

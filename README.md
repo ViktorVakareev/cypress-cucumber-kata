@@ -67,7 +67,8 @@ Other commands:
 | `npm test` | The app's own unit and API tests (node:test) |
 | `npm run typecheck` | TypeScript check of the whole suite |
 | `npm run check:steps` | Gherkin dry run: every step must match exactly one step definition |
-| `npm start` | The app on http://localhost:3000. Log in as `maker1`, `checker1`, `checker2` or `viewer1`, password `kata-pass-1` (local demo only) |
+| `npm start` | The app on http://localhost:3000. Log in as `maker1`, `checker1`, `checker2` or `viewer1` with the password from your local `.env` file |
+| `npm run setup` | Creates `.env` with a random demo password (also runs automatically after `npm ci`); `.env` is never committed |
 
 After `npm run e2e`, the Cucumber HTML report is in `reports/cucumber-report.html`.
 

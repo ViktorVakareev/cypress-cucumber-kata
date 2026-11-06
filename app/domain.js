@@ -6,17 +6,22 @@
 const crypto = require('node:crypto');
 
 // ---------------------------------------------------------------------------
-// Users. Demo only: plain passwords, clearly not production practice.
+// Users. Demo only: every user shares one password, read from the KATA_PASSWORD
+// environment variable (local .env file, never committed). Not production practice.
 // ---------------------------------------------------------------------------
-const DEMO_PASSWORD = 'kata-pass-1';
-
 const USERS = {
-  maker1: { username: 'maker1', role: 'maker', password: DEMO_PASSWORD },
-  maker2: { username: 'maker2', role: 'maker', password: DEMO_PASSWORD },
-  checker1: { username: 'checker1', role: 'checker', password: DEMO_PASSWORD },
-  checker2: { username: 'checker2', role: 'checker', password: DEMO_PASSWORD },
-  viewer1: { username: 'viewer1', role: 'viewer', password: DEMO_PASSWORD },
+  maker1: { username: 'maker1', role: 'maker' },
+  maker2: { username: 'maker2', role: 'maker' },
+  checker1: { username: 'checker1', role: 'checker' },
+  checker2: { username: 'checker2', role: 'checker' },
+  viewer1: { username: 'viewer1', role: 'viewer' },
 };
+
+function demoPassword() {
+  const password = process.env.KATA_PASSWORD;
+  if (!password) throw new Error('KATA_PASSWORD is not set. Run `npm run setup`.');
+  return password;
+}
 
 // ---------------------------------------------------------------------------
 // Money. Amounts travel as decimal strings ("1000.50") and are stored as
@@ -220,7 +225,7 @@ function createSessions() {
   return {
     login(username, password) {
       const user = USERS[username];
-      if (!user || user.password !== password) return null;
+      if (!user || password !== demoPassword()) return null;
       const token = crypto.randomUUID();
       sessions.set(token, { username: user.username, role: user.role });
       return { token, user: { username: user.username, role: user.role } };
@@ -239,7 +244,6 @@ function createSessions() {
 
 module.exports = {
   USERS,
-  DEMO_PASSWORD,
   CURRENCIES,
   ValidationError,
   DomainError,

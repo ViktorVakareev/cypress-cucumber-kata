@@ -5,6 +5,7 @@
 //   node app/server.js               -> http://localhost:3000
 //   node app/server.js --test-mode   -> also enables POST /api/test/reset (clears payments)
 //   PORT=4000 node app/server.js     -> another port
+// The demo password is read from KATA_PASSWORD (.env, created by `npm run setup`).
 
 'use strict';
 
@@ -72,7 +73,7 @@ function createApp({ testMode = false } = {}) {
     const { pathname } = url;
     const method = req.method;
 
-    if (method === 'GET' && pathname === '/api/health') return send(res, 200, { status: 'ok' });
+    if ((method === 'GET' || method === 'HEAD') && pathname === '/api/health') return send(res, 200, { status: 'ok' });
 
     if (method === 'POST' && pathname === '/api/test/reset') {
       if (!testMode) return sendError(res, 404, 'NOT_FOUND', 'Not found');
@@ -155,6 +156,16 @@ function createApp({ testMode = false } = {}) {
 module.exports = { createApp };
 
 if (require.main === module) {
+  // The demo password comes from .env (created by `npm install`, never committed).
+  try {
+    process.loadEnvFile();
+  } catch {
+    // no .env file: fall through to the check below
+  }
+  if (!process.env.KATA_PASSWORD) {
+    console.error('KATA_PASSWORD is not set. Run `npm run setup` to create a local .env file.');
+    process.exit(1);
+  }
   const testMode = process.argv.includes('--test-mode');
   const port = Number(process.env.PORT ?? 3000);
   createApp({ testMode }).listen(port, () => {

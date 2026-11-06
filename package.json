@@ -5,6 +5,8 @@
   "description": "Cypress + Cucumber (BDD) test suite in TypeScript for a small payments app with maker-checker approval, IBAN validation and a REST API.",
   "license": "MIT",
   "scripts": {
+    "setup": "node tools/setup-env.mjs",
+    "postinstall": "node tools/setup-env.mjs",
     "start": "node app/server.js",
     "start:test": "node app/server.js --test-mode",
     "test": "node --test",
@@ -13,8 +15,8 @@
     "cy:open": "cypress open",
     "cy:run": "cypress run",
     "cy:smoke": "cypress run --expose tags=@smoke",
-    "e2e": "start-server-and-test start:test http://localhost:3000/api/health cy:run",
-    "e2e:smoke": "start-server-and-test start:test http://localhost:3000/api/health cy:smoke"
+    "e2e": "start-server-and-test start:test http-get://localhost:3000/api/health cy:run",
+    "e2e:smoke": "start-server-and-test start:test http-get://localhost:3000/api/health cy:smoke"
   },
   "cypress-cucumber-preprocessor": {
     "stepDefinitions": "cypress/support/step_definitions/**/*.ts",
